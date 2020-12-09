@@ -35,6 +35,8 @@
  *-------------------------------------------------------------
  */
 
+`include "microwatt.v"
+
 module user_proj_example #(
     parameter BITS = 32
 )(
@@ -72,7 +74,7 @@ module user_proj_example #(
     output [`MPRJ_IO_PADS-1:0] io_oeb
 );
     wire clk;
-    wire rst;
+    wire rst; // active high
 
     wire [`MPRJ_IO_PADS-1:0] io_in;
     wire [`MPRJ_IO_PADS-1:0] io_out;
@@ -86,87 +88,137 @@ module user_proj_example #(
     wire [3:0] wstrb;
     wire [31:0] la_write;
 
-    // WB MI A
-    assign valid = wbs_cyc_i && wbs_stb_i; 
-    assign wstrb = wbs_sel_i & {4{wbs_we_i}};
-    assign wbs_dat_o = rdata;
-    assign wdata = wbs_dat_i;
+   // microwatt signals
+   wire 	ext_clk;
+   wire 	ext_rst; // active low
+   wire 	jtag_tck;
+   wire 	jtag_tdi;
+   wire 	jtag_tdo;
+   wire 	jtag_tms;
+   wire 	jtag_trst;
+   wire 	spi_flash_clk;
+   wire 	spi_flash_cs_n;
+   wire 	spi_flash_hold_n;
+   wire 	spi_flash_miso;
+   wire 	spi_flash_mosi;
+   wire 	spi_flash_wp_n;
+   wire 	uart0_rxd;
+   wire 	uart0_txd;
+   wire 	uart1_rxd; // not hooked up
+   wire 	uart1_txd; // not hooked up
+   wire 	wb_la_ack; // not hooked up
+   wire [31:0] wb_la_adr; // not hooked up
+   wire 	 wb_la_cyc; // not hooked up
+   wire [63:0]  wb_la_dat_i; // not hooked up
+   wire [63:0] wb_la_dat_o; // not hooked up
+   wire [7:0]  wb_la_sel; // not hooked up
+   wire 	 wb_la_stall; // not hooked up
+   wire 	 wb_la_stb; // not hooked up
+   wire 	 wb_la_we; // not hooked up
 
-    // IO
-    assign io_out = count;
-    assign io_oeb = {(`MPRJ_IO_PADS-1){rst}};
+    // Assuming LA probes [65:64] are for controlling the count clk & reset
+   assign clk = (~la_oen[64]) ? la_data_in[64]: wb_clk_i;
+   assign rst = (~la_oen[65]) ? la_data_in[65]: wb_rst_i;
 
-    // LA
-    assign la_data_out = {{(127-BITS){1'b0}}, count};
-    // Assuming LA probes [63:32] are for controlling the count register  
-    assign la_write = ~la_oen[63:32] & ~{BITS{valid}};
-    // Assuming LA probes [65:64] are for controlling the count clk & reset  
-    assign clk = (~la_oen[64]) ? la_data_in[64]: wb_clk_i;
-    assign rst = (~la_oen[65]) ? la_data_in[65]: wb_rst_i;
+   // microwatt signals
+   assign ext_clk = clk;
+   assign ext_rst = ~rst; // Polarity?
 
-    counter #(
-        .BITS(BITS)
-    ) counter(
-        .clk(clk),
-        .reset(rst),
-        .ready(wbs_ack_o),
-        .valid(valid),
-        .rdata(rdata),
-        .wdata(wbs_dat_i),
-        .wstrb(wstrb),
-        .la_write(la_write),
-        .la_input(la_data_in[63:32]),
-        .count(count)
-    );
+
+   // JTAG ping 16-29
+   assign jtag_tck = io_in[16];
+   assign io_out[16] = 0; // don't care
+   assign io_oeb[16] = 1; // input
+
+   assign jtag_tdi = io_in[17];
+   assign io_out[17] = 0; // don't care
+   assign io_oeb[17] = 1; // input
+
+   // assign unused  = io_in[18];
+   assign io_out[18] = jtag_tdo;
+   assign io_oeb[18] = rst; // output
+
+   assign jtag_tms = io_in[19];
+   assign io_out[19] = 0; // don't care
+   assign io_oeb[19] = 1; // input
+
+   assign jtag_trst = 0; // don't use.
+
+
+   // SPI
+   // assign unused  = io_in[9];
+   assign io_out[9] = spi_flash_clk;
+   assign io_oeb[9] = rst; // output
+
+   // assign unused  = io_in[8];
+   assign io_out[8] = spi_flash_cs_n; //(polarity??)
+   assign io_oeb[8] = rst; // output
+
+   assign spi_flash_hold_n = io_in[12];
+   assign io_out[12] = 0; // don't care
+   assign io_oeb[12] = 1; // input
+
+   assign spi_flash_miso = io_in[10];
+   assign io_out[10] = 0; // don't care
+   assign io_oeb[10] = 1; // input
+
+   //   assign  = io_in[11];
+   assign io_out[11] = spi_flash_mosi;
+   assign io_oeb[11] = rst; // output
+
+   assign spi_flash_wp_n = io_in[13];
+   assign io_out[13] = 0; // don't care
+   assign io_oeb[13] = 1; // input
+
+
+   // UART pin 5 6 as assigned
+   assign uart0_rxd = io_in[5];
+   assign io_out[5] = 0; // don't care
+   assign io_oeb[5] = 1; // input
+
+   // assign unused  = io_in[6];
+   assign io_out[6] = uart0_txd;
+   assign io_oeb[6] = rst;
+
+   // UART pin 20 21
+   assign uart1_rxd = io_in[20];
+   assign io_out[20] = 0; // don't care
+   assign io_oeb[20] = 1; // input
+
+   // assign unused  = io_in[21];
+   assign io_out[21] = uart1_txd;
+   assign io_oeb[21] = rst;
+
+   microwatt
+     microwatt_0(
+	       .ext_clk(ext_clk),
+	       .ext_rst(ext_rst),
+	       .uart0_rxd(uart0_rxd),
+	       .uart1_rxd(uart1_rxd),
+	       .jtag_tck(jtag_tck),
+	       .jtag_tdi(jtag_tdi),
+	       .jtag_tms(jtag_tms),
+	       .jtag_trst(jtag_trst),
+	       .wb_la_dat_i(wb_la_dat_i),
+	       .wb_la_ack(wb_la_ack),
+	       .wb_la_stall(wb_la_stall),
+	       .uart0_txd(uart0_txd),
+	       .uart1_txd(uart1_txd),
+	       .spi_flash_cs_n(spi_flash_cs_n),
+	       .spi_flash_clk(spi_flash_clk),
+	       .spi_flash_mosi(spi_flash_mosi),
+	       .spi_flash_miso(spi_flash_miso),
+	       .spi_flash_wp_n(spi_flash_wp_n),
+	       .spi_flash_hold_n(spi_flash_hold_n),
+	       .jtag_tdo(jtag_tdo),
+	       .wb_la_adr(wb_la_adr),
+	       .wb_la_dat_o(wb_la_dat_o),
+	       .wb_la_cyc(wb_la_cyc),
+	       .wb_la_stb(wb_la_stb),
+	       .wb_la_sel(wb_la_sel),
+	       .wb_la_we(wb_la_we));
+
 
 endmodule
 
-module counter #(
-    parameter BITS = 32
-)(
-    input clk,
-    input reset,
-    input valid,
-    input [3:0] wstrb,
-    input [BITS-1:0] wdata,
-    input [BITS-1:0] la_write,
-    input [BITS-1:0] la_input,
-    output ready,
-    output [BITS-1:0] rdata,
-    output [BITS-1:0] count
-);
-    reg ready;
-    reg [BITS-1:0] count;
-    reg [BITS-1:0] rdata;
-
-    always @(posedge clk) begin
-        if (reset) begin
-            count <= 0;
-            ready <= 0;
-        end else begin
-            ready <= 1'b0;
-            if (~|la_write) begin
-                count <= count + 1;
-            end
-            if (valid && !ready) begin
-                ready <= 1'b1;
-                rdata <= count;
-                if (wstrb[0]) count[7:0]   <= wdata[7:0];
-                if (wstrb[1]) count[15:8]  <= wdata[15:8];
-                if (wstrb[2]) count[23:16] <= wdata[23:16];
-                if (wstrb[3]) count[31:24] <= wdata[31:24];
-            end
-        end
-    end
-
-    genvar i;
-    generate 
-        for(i=0; i<BITS; i=i+1) begin
-          always @(posedge clk) begin
-              if (la_write[i]) count[i] <= la_input[i];
-          end
-        end
-    endgenerate
-
-endmodule
 `default_nettype wire
