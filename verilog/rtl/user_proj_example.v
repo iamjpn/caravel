@@ -72,32 +72,32 @@ module user_proj_example #(
     wire [31:0] la_write;
 
    // microwatt signals
-   input 	ext_clk;
-   input 	ext_rst; // active low
-   input 	jtag_tck;
-   input 	jtag_tdi;
-   output 	jtag_tdo;
-   input 	jtag_tms;
-   input 	jtag_trst;
-   output 	spi_flash_clk;
-   output 	spi_flash_cs_n;
-   inout 	spi_flash_hold_n;
-   inout 	spi_flash_miso;
-   inout 	spi_flash_mosi;
-   inout 	spi_flash_wp_n;
-   input 	uart0_rxd;
-   output 	uart0_txd;
-   input 	uart1_rxd; // not hooked up
-   output 	uart1_txd; // not hooked up
-   input 	wb_la_ack; // not hooked up
-   output [31:0] wb_la_adr; // not hooked up
-   output 	 wb_la_cyc; // not hooked up
-   input [63:0]  wb_la_dat_i; // not hooked up
-   output [63:0] wb_la_dat_o; // not hooked up
-   output [7:0]  wb_la_sel; // not hooked up
-   input 	 wb_la_stall; // not hooked up
-   output 	 wb_la_stb; // not hooked up
-   output 	 wb_la_we; // not hooked up
+   wire 	ext_clk;
+   wire 	ext_rst; // active low
+   wire 	jtag_tck;
+   wire 	jtag_tdi;
+   wire 	jtag_tdo;
+   wire 	jtag_tms;
+   wire 	jtag_trst;
+   wire 	spi_flash_clk;
+   wire 	spi_flash_cs_n;
+   wire 	spi_flash_hold_n;
+   wire 	spi_flash_miso;
+   wire 	spi_flash_mosi;
+   wire 	spi_flash_wp_n;
+   wire 	uart0_rxd;
+   wire 	uart0_txd;
+   wire 	uart1_rxd; // not hooked up
+   wire 	uart1_txd; // not hooked up
+   wire 	wb_la_ack; // not hooked up
+   wire [31:0] wb_la_adr; // not hooked up
+   wire 	 wb_la_cyc; // not hooked up
+   wire [63:0]  wb_la_dat_i; // not hooked up
+   wire [63:0] wb_la_dat_o; // not hooked up
+   wire [7:0]  wb_la_sel; // not hooked up
+   wire 	 wb_la_stall; // not hooked up
+   wire 	 wb_la_stb; // not hooked up
+   wire 	 wb_la_we; // not hooked up
 
     // Assuming LA probes [65:64] are for controlling the count clk & reset
    assign clk = (~la_oen[64]) ? la_data_in[64]: wb_clk_i;
@@ -105,7 +105,7 @@ module user_proj_example #(
 
    // microwatt signals
    assign ext_clk = clk;
-   assign ext_rst = not rst; // Polarity?
+   assign ext_rst = ~rst; // Polarity?
 
 
    // JTAG ping 16-29
@@ -154,7 +154,7 @@ module user_proj_example #(
    assign io_oeb[13] = 1; // input
 
 
-   // UART ping 5 6 as assigned
+   // UART pin 5 6 as assigned
    uart0_rxd = io_in[5];
    assign io_out[5] = 0; // don't care
    assign io_oeb[5] = 1; // input
@@ -162,6 +162,15 @@ module user_proj_example #(
    // assign unused  = io_in[6];
    assign io_out[6] = uart0_txd;
    assign io_oeb[6] = rst;
+
+   // UART pin 20 21
+   uart1_rxd = io_in[20];
+   assign io_out[20] = 0; // don't care
+   assign io_oeb[20] = 1; // input
+
+   // assign unused  = io_in[21];
+   assign io_out[21] = uart1_txd;
+   assign io_oeb[21] = rst;
 
    toplevel
      microwatt(
