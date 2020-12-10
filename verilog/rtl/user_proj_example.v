@@ -20,6 +20,8 @@
  *-------------------------------------------------------------
  */
 
+`include "microwatt.v"
+
 module user_proj_example #(
     parameter BITS = 32
 )(
@@ -134,7 +136,7 @@ module user_proj_example #(
    assign io_oeb[9] = rst; // output
 
    // assign unused  = io_in[8];
-   assign io_out[8] = spi_flash_cs_n (polarity??);
+   assign io_out[8] = spi_flash_cs_n; //(polarity??)
    assign io_oeb[8] = rst; // output
 
    assign spi_flash_hold_n = io_in[12];
@@ -155,7 +157,7 @@ module user_proj_example #(
 
 
    // UART pin 5 6 as assigned
-   uart0_rxd = io_in[5];
+   assign uart0_rxd = io_in[5];
    assign io_out[5] = 0; // don't care
    assign io_oeb[5] = 1; // input
 
@@ -164,7 +166,7 @@ module user_proj_example #(
    assign io_oeb[6] = rst;
 
    // UART pin 20 21
-   uart1_rxd = io_in[20];
+   assign uart1_rxd = io_in[20];
    assign io_out[20] = 0; // don't care
    assign io_oeb[20] = 1; // input
 
@@ -172,8 +174,8 @@ module user_proj_example #(
    assign io_out[21] = uart1_txd;
    assign io_oeb[21] = rst;
 
-   toplevel
-     microwatt(
+   microwatt
+     microwatt_0(
 	       .ext_clk(ext_clk),
 	       .ext_rst(ext_rst),
 	       .uart0_rxd(uart0_rxd),
