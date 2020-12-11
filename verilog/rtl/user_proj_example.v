@@ -146,30 +146,29 @@ module user_proj_example #(
 
 
    // SPI
-   // assign unused  = io_in[9];
-   assign io_out[9] = spi_flash_clk;
-   assign io_oeb[9] = rst; // output
-
    // assign unused  = io_in[8];
    assign io_out[8] = spi_flash_cs_n; //(polarity??)
    assign io_oeb[8] = rst; // output
 
-   assign spi_flash_hold_n = io_in[12];
+   // assign unused  = io_in[9];
+   assign io_out[9] = spi_flash_clk;
+   assign io_oeb[9] = rst; // output
+
+   //   assign  = io_in[10];
+   assign io_out[10] = spi_flash_mosi;
+   assign io_oeb[10] = rst; // output
+
+   assign spi_flash_miso = io_in[11];
+   assign io_out[11] = 0; // don't care
+   assign io_oeb[11] = 1; // input
+
+   assign spi_flash_wp_n = io_in[12];
    assign io_out[12] = 0; // don't care
    assign io_oeb[12] = 1; // input
 
-   assign spi_flash_miso = io_in[10];
-   assign io_out[10] = 0; // don't care
-   assign io_oeb[10] = 1; // input
-
-   //   assign  = io_in[11];
-   assign io_out[11] = spi_flash_mosi;
-   assign io_oeb[11] = rst; // output
-
-   assign spi_flash_wp_n = io_in[13];
+   assign spi_flash_hold_n = io_in[13];
    assign io_out[13] = 0; // don't care
    assign io_oeb[13] = 1; // input
-
 
    // UART pin 5 6 as assigned
    assign uart0_rxd = io_in[5];
