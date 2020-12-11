@@ -105,15 +105,12 @@ module user_proj_example #(
    wire 	uart0_txd;
    wire 	uart1_rxd; // not hooked up
    wire 	uart1_txd; // not hooked up
-   wire 	wb_la_ack; // not hooked up
-   wire [31:0] wb_la_adr; // not hooked up
-   wire 	 wb_la_cyc; // not hooked up
-   wire [63:0]  wb_la_dat_i; // not hooked up
-   wire [63:0] wb_la_dat_o; // not hooked up
-   wire [7:0]  wb_la_sel; // not hooked up
-   wire 	 wb_la_stall; // not hooked up
-   wire 	 wb_la_stb; // not hooked up
-   wire 	 wb_la_we; // not hooked up
+
+   wire		oib_clk;
+   wire	[7:0]	ob_data;
+   wire		ob_pty;
+   wire	[7:0]	ib_data;
+   wire		ib_pty;
 
     // Assuming LA probes [65:64] are for controlling the count clk & reset
    assign clk = (~la_oen[64]) ? la_data_in[64]: wb_clk_i;
@@ -123,7 +120,16 @@ module user_proj_example #(
    assign ext_clk = clk;
    assign ext_rst_n = ~rst; // Polarity?
 
-   // JTAG ping 16-29
+   // JTAG pin 14-17
+
+   // assign unused  = io_in[14];
+   assign io_out[14] = jtag_tdo;
+   assign io_oeb[14] = rst; // output
+
+   assign jtag_tms = io_in[15];
+   assign io_out[15] = 0; // don't care
+   assign io_oeb[15] = 1; // input
+
    assign jtag_tck = io_in[16];
    assign io_out[16] = 0; // don't care
    assign io_oeb[16] = 1; // input
@@ -131,14 +137,6 @@ module user_proj_example #(
    assign jtag_tdi = io_in[17];
    assign io_out[17] = 0; // don't care
    assign io_oeb[17] = 1; // input
-
-   // assign unused  = io_in[18];
-   assign io_out[18] = jtag_tdo;
-   assign io_oeb[18] = rst; // output
-
-   assign jtag_tms = io_in[19];
-   assign io_out[19] = 0; // don't care
-   assign io_oeb[19] = 1; // input
 
    assign jtag_trst = 0; // don't use.
 
@@ -176,14 +174,17 @@ module user_proj_example #(
    assign io_out[6] = uart0_txd;
    assign io_oeb[6] = rst;
 
-   // UART pin 20 21
-   assign uart1_rxd = io_in[20];
-   assign io_out[20] = 0; // don't care
-   assign io_oeb[20] = 1; // input
+   // bill's bus 18-36 -> 18-27 outputs, 28-36 inputs
+   //assign =  in[18:27] = rst; don't care
+   assign io_oeb[27:18] = rst; // outputs
+   assign io_out[18] = oib_clk;
+   assign io_out[26:19] = ob_data;
+   assign io_out[27] = ob_pty;
 
-   // assign unused  = io_in[21];
-   assign io_out[21] = uart1_txd;
-   assign io_oeb[21] = rst;
+   assign io_out[36:28] = 0; // don't care
+   assign io_oeb[36:28] = 1; // input
+   assign ib_data = io_in[35:28];
+   assign ib_pty = io_in[36];
 
    microwatt
      microwatt_0(
@@ -195,9 +196,6 @@ module user_proj_example #(
 	       .jtag_tdi(jtag_tdi),
 	       .jtag_tms(jtag_tms),
 	       .jtag_trst(jtag_trst),
-	       .wb_la_dat_i(wb_la_dat_i),
-	       .wb_la_ack(wb_la_ack),
-	       .wb_la_stall(wb_la_stall),
 	       .uart0_txd(uart0_txd),
 	       .uart1_txd(uart1_txd),
 	       .spi_flash_cs_n(spi_flash_cs_n),
@@ -206,13 +204,11 @@ module user_proj_example #(
 	       .spi_flash_sdat_i(spi_flash_i),
 	       .spi_flash_sdat_oe(spi_flash_oe),
 	       .jtag_tdo(jtag_tdo),
-	       .wb_la_adr(wb_la_adr),
-	       .wb_la_dat_o(wb_la_dat_o),
-	       .wb_la_cyc(wb_la_cyc),
-	       .wb_la_stb(wb_la_stb),
-	       .wb_la_sel(wb_la_sel),
-	       .wb_la_we(wb_la_we));
-
+	       .oib_clk(oib_clk),
+	       .ob_data(ob_data),
+	       .ob_pty(ob_pty),
+	       .ib_data(ib_data),
+		 .ib_pty(ib_pty));
 
 endmodule
 
