@@ -75,7 +75,7 @@ module user_proj_example #(
 
    // microwatt signals
    wire 	ext_clk;
-   wire	 	ext_rst_n; // active low
+   reg	 	ext_rst_n; // active low
    wire         alt_reset;
    wire 	jtag_tck;
    wire 	jtag_tdi;
@@ -109,7 +109,19 @@ module user_proj_example #(
 
    // microwatt signals
    assign ext_clk = clk;
-   assign ext_rst_n = ~rst; // Polarity?
+
+   reg [11:0] reset_counter;
+   always @(posedge clk) begin
+      if (rst) begin
+         ext_rst_n <= 1'b0;
+         reset_counter <= 0;
+      end else if (reset_counter < 4095) begin
+         ext_rst_n <= 1'b0;
+         reset_counter <= reset_counter + 1'b1;
+      end else begin
+         ext_rst_n <= 1'b1;
+      end
+   end
 
    // JTAG pin 14-17
 
