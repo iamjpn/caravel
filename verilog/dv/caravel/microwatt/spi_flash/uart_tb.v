@@ -212,7 +212,7 @@ module spi_flash;
 		.io0(user_flash_io0),
 		.io1(user_flash_io1),
 		.io2(user_flash_io2),
-		.io3(user_flash_io2)
+		.io3(user_flash_io3)
 	);
 
 	monitor_rx #(
