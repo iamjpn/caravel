@@ -90,7 +90,7 @@ module user_proj_example #(
 
    // microwatt signals
    wire 	ext_clk;
-   wire 	ext_rst; // active low
+   wire	 	ext_rst_n; // active low
    wire 	jtag_tck;
    wire 	jtag_tdi;
    wire 	jtag_tdo;
@@ -121,7 +121,7 @@ module user_proj_example #(
 
    // microwatt signals
    assign ext_clk = clk;
-   assign ext_rst = ~rst; // Polarity?
+   assign ext_rst_n = ~rst; // Polarity?
 
    // JTAG ping 16-29
    assign jtag_tck = io_in[16];
@@ -188,7 +188,7 @@ module user_proj_example #(
    microwatt
      microwatt_0(
 	       .ext_clk(ext_clk),
-	       .ext_rst(ext_rst),
+	       .ext_rst(ext_rst_n),
 	       .uart0_rxd(uart0_rxd),
 	       .uart1_rxd(uart1_rxd),
 	       .jtag_tck(jtag_tck),
