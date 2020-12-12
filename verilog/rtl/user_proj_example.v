@@ -83,10 +83,9 @@ module user_proj_example #(
    wire 	jtag_trst;
    wire 	spi_flash_clk;
    wire 	spi_flash_cs_n;
-   wire 	spi_flash_hold_n;
-   wire 	spi_flash_miso;
-   wire 	spi_flash_mosi;
-   wire 	spi_flash_wp_n;
+   inout        [3:0] spi_flash_i;
+   inout        [3:0] spi_flash_o;
+   wire         [3:0] spi_flash_oe;
    wire 	uart0_rxd;
    wire 	uart0_txd;
    wire 	uart1_rxd; // not hooked up
@@ -109,7 +108,6 @@ module user_proj_example #(
    assign ext_clk = clk;
    assign ext_rst = ~rst; // Polarity?
 
-
    // JTAG ping 16-29
    assign jtag_tck = io_in[16];
    assign io_out[16] = 0; // don't care
@@ -129,7 +127,6 @@ module user_proj_example #(
 
    assign jtag_trst = 0; // don't use.
 
-
    // SPI
    // assign unused  = io_in[8];
    assign io_out[8] = spi_flash_cs_n; //(polarity??)
@@ -139,21 +136,21 @@ module user_proj_example #(
    assign io_out[9] = spi_flash_clk;
    assign io_oeb[9] = rst; // output
 
-   //   assign  = io_in[10];
-   assign io_out[10] = spi_flash_mosi;
-   assign io_oeb[10] = rst; // output
+   // Bi direction SPI pins
+   assign io_out[10] = spi_flash_o[0];
+   assign io_out[11] = spi_flash_o[1];
+   assign io_out[12] = spi_flash_o[2];
+   assign io_out[13] = spi_flash_o[3];
 
-   assign spi_flash_miso = io_in[11];
-   assign io_out[11] = 0; // don't care
-   assign io_oeb[11] = 1; // input
+   assign io_oeb[10] = ~spi_flash_oe[0];
+   assign io_oeb[11] = ~spi_flash_oe[1];
+   assign io_oeb[12] = ~spi_flash_oe[2];
+   assign io_oeb[13] = ~spi_flash_oe[3];
 
-   assign spi_flash_wp_n = io_in[12];
-   assign io_out[12] = 0; // don't care
-   assign io_oeb[12] = 1; // input
-
-   assign spi_flash_hold_n = io_in[13];
-   assign io_out[13] = 0; // don't care
-   assign io_oeb[13] = 1; // input
+   assign spi_flash_i[0] = io_in[10];
+   assign spi_flash_i[1] = io_in[11];
+   assign spi_flash_i[2] = io_in[12];
+   assign spi_flash_i[3] = io_in[13];
 
    // UART pin 5 6 as assigned
    assign uart0_rxd = io_in[5];
@@ -190,10 +187,9 @@ module user_proj_example #(
 	       .uart1_txd(uart1_txd),
 	       .spi_flash_cs_n(spi_flash_cs_n),
 	       .spi_flash_clk(spi_flash_clk),
-	       .spi_flash_mosi(spi_flash_mosi),
-	       .spi_flash_miso(spi_flash_miso),
-	       .spi_flash_wp_n(spi_flash_wp_n),
-	       .spi_flash_hold_n(spi_flash_hold_n),
+	       .spi_flash_sdat_o(spi_flash_o),
+	       .spi_flash_sdat_i(spi_flash_i),
+	       .spi_flash_sdat_oe(spi_flash_oe),
 	       .jtag_tdo(jtag_tdo),
 	       .wb_la_adr(wb_la_adr),
 	       .wb_la_dat_o(wb_la_dat_o),
