@@ -91,6 +91,7 @@ module user_proj_example #(
    // microwatt signals
    wire 	ext_clk;
    wire	 	ext_rst_n; // active low
+   wire         alt_reset;
    wire 	jtag_tck;
    wire 	jtag_tdi;
    wire 	jtag_tdo;
@@ -112,9 +113,14 @@ module user_proj_example #(
    wire	[7:0]	ib_data;
    wire		ib_pty;
 
+   assign uart1_rxd = 1; // not hooked up
+
     // Assuming LA probes [65:64] are for controlling the count clk & reset
    assign clk = (~la_oen[64]) ? la_data_in[64]: wb_clk_i;
    assign rst = (~la_oen[65]) ? la_data_in[65]: wb_rst_i;
+
+   // LA probe 66 is to controll the reset address (RAM or FLASH)
+   assign alt_reset = (~la_oen[66]) ? la_data_in[66]:  1'b0;
 
    // microwatt signals
    assign ext_clk = clk;
@@ -176,13 +182,13 @@ module user_proj_example #(
 
    // bill's bus 18-36 -> 18-27 outputs, 28-36 inputs
    //assign =  in[18:27] = rst; don't care
-   assign io_oeb[27:18] = rst; // outputs
+   assign io_oeb[27:18] = {10{rst}}; // outputs
    assign io_out[18] = oib_clk;
    assign io_out[26:19] = ob_data;
    assign io_out[27] = ob_pty;
 
    assign io_out[36:28] = 0; // don't care
-   assign io_oeb[36:28] = 1; // input
+   assign io_oeb[36:28] = {9{1'b0}}; // input
    assign ib_data = io_in[35:28];
    assign ib_pty = io_in[36];
 
@@ -190,6 +196,7 @@ module user_proj_example #(
      microwatt_0(
 	       .ext_clk(ext_clk),
 	       .ext_rst(ext_rst_n),
+	       .alt_reset(alt_reset),
 	       .uart0_rxd(uart0_rxd),
 	       .uart1_rxd(uart1_rxd),
 	       .jtag_tck(jtag_tck),
