@@ -84,8 +84,8 @@ module user_proj_example #(
    wire 	jtag_trst;
    wire 	spi_flash_clk;
    wire 	spi_flash_cs_n;
-   inout        [3:0] spi_flash_i;
-   inout        [3:0] spi_flash_o;
+   wire         [3:0] spi_flash_i;
+   wire         [3:0] spi_flash_o;
    wire         [3:0] spi_flash_oe;
    wire 	uart0_rxd;
    wire 	uart0_txd;
