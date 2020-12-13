@@ -21,14 +21,13 @@ set ::env(FP_PIN_ORDER_CFG) $script_dir/pin_order.cfg
 set ::env(SYNTH_READ_BLACKBOX_LIB) 1
 
 set ::env(PL_BASIC_PLACEMENT) 1
-set ::env(PL_TARGET_DENSITY) 0.5
+set ::env(PL_TARGET_DENSITY) 0.6
 
 set ::env(VERILOG_FILES_BLACKBOX) "\
-        $script_dir/../../verilog/rtl/DFFRAM_4k.v"
+	$script_dir/../../verilog/rtl/DFFRAM_4k.v"
 
 set ::env(EXTRA_LEFS) "\
-        $script_dir/../../lef/DFFRAM_4k.lef"
+	$script_dir/../../lef/DFFRAM_4k.lef"
 
 set ::env(EXTRA_GDS_FILES) "\
-        $script_dir/../../gds/DFFRAM_4k.gds"
-
+	$script_dir/../../gds/DFFRAM_4k.gds"
