@@ -95,15 +95,16 @@ module spi_flash;
 	wire SDO;
 	wire user_flash_csb;
 	wire user_flash_clk;
-	wire user_flash_io0;
-	wire user_flash_io1;
+	inout user_flash_io0;
+	inout user_flash_io1;
 	inout user_flash_io2;
 	inout user_flash_io3;
 
 	assign user_flash_csb = mprj_io[8];
 	assign user_flash_clk = mprj_io[9];
+
+	// Without output enables, how can we hook up bidirectional pins?
 	assign user_flash_io0 = mprj_io[10];
-	// how to handle bidirectional signals
 	assign mprj_io[11] = user_flash_io1;
 	assign user_flash_io2 = mprj_io[12];
 	assign user_flash_io3 = mprj_io[13];
@@ -205,7 +206,7 @@ module spi_flash;
 	);
 
 	spiflash #(
-		.FILENAME("microwatt.hex")
+		.FILENAME("test.hex")
 	) spiflash_microwatt (
 		.csb(user_flash_csb),
 		.clk(user_flash_clk),
