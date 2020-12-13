@@ -7,15 +7,17 @@ set save_path $script_dir/../..
 #verilog_elaborate
 run_synthesis
 
-#init_floorplan
-#place_io_ol
-run_floorplan
+init_floorplan
+place_io_ol
+#run_floorplan
 
 set ::env(FP_DEF_TEMPATE) $script_dir/../../def/user_project_wrapper_empty.def
 
 apply_def_template
 
-add_macro_placement mprj 1150 1700 N
+add_macro_placement memory_0 100 100 N
+
+add_macro_placement memory_1 1000 1000 N
 
 manual_macro_placement f
 run_placement

@@ -17,6 +17,7 @@ set ::env(FP_IO_HLENGTH) $::unit
 set ::env(FP_IO_VTHICKNESS_MULT) 4
 set ::env(FP_IO_HTHICKNESS_MULT) 4
 
+# Needed because DFFRAM uses standard cells
 set ::env(SYNTH_READ_BLACKBOX_LIB) 1
 
 set ::env(CLOCK_PORT) "user_clock2"
