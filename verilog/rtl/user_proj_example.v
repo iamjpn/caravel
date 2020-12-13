@@ -17,29 +17,14 @@
 /*
  *-------------------------------------------------------------
  *
- * user_proj_example
- *
- * This is an example of a (trivially simple) user project,
- * showing how the user project can connect to the logic
- * analyzer, the wishbone bus, and the I/O pads.
- *
- * This project generates an integer count, which is output
- * on the user area GPIO pads (digital output only).  The
- * wishbone connection allows the project to be controlled
- * (start and stop) from the management SoC program.
- *
- * See the testbenches in directory "mprj_counter" for the
- * example programs that drive this user project.  The three
- * testbenches are "io_ports", "la_test1", and "la_test2".
+ * microwatt wrapper
  *
  *-------------------------------------------------------------
  */
 
 `include "microwatt.v"
 
-module user_proj_example #(
-    parameter BITS = 32
-)(
+module user_proj_example (
 `ifdef USE_POWER_PINS
     inout vdda1,	// User area 1 3.3V supply
     inout vdda2,	// User area 2 3.3V supply
@@ -73,20 +58,13 @@ module user_proj_example #(
     output [`MPRJ_IO_PADS-1:0] io_out,
     output [`MPRJ_IO_PADS-1:0] io_oeb
 );
+
     wire clk;
     wire rst; // active high
 
     wire [`MPRJ_IO_PADS-1:0] io_in;
     wire [`MPRJ_IO_PADS-1:0] io_out;
     wire [`MPRJ_IO_PADS-1:0] io_oeb;
-
-    wire [31:0] rdata; 
-    wire [31:0] wdata;
-    wire [BITS-1:0] count;
-
-    wire valid;
-    wire [3:0] wstrb;
-    wire [31:0] la_write;
 
    // microwatt signals
    wire 	ext_clk;
@@ -115,7 +93,7 @@ module user_proj_example #(
 
    assign uart1_rxd = 1; // not hooked up
 
-    // Assuming LA probes [65:64] are for controlling the count clk & reset
+    // Assuming LA probes [65:64] are for controlling the microwatt clk & reset
    assign clk = (~la_oen[64]) ? la_data_in[64]: wb_clk_i;
    assign rst = (~la_oen[65]) ? la_data_in[65]: wb_rst_i;
 
