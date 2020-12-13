@@ -7,6 +7,11 @@ OPENLANE_IMAGE_NAME ?= openlane:$(OPENLANE_TAG)
 OPENLANE_BASIC_COMMAND = "cd /project/openlane && flow.tcl -design ./$* -save_path .. -save -tag $* -overwrite"
 OPENLANE_INTERACTIVE_COMMAND = "cd /project/openlane && flow.tcl -it -file ./$*/interactive.tcl"
 
+DOCKER ?= docker
+ifeq ($(DOCKER),"docker")
+DOCKER_USER_ARGS ?= -u $(shell id -u $(USER)):$(shell id -g $(USER))
+endif
+
 all: $(BLOCKS)
 
 $(CONFIG) :
@@ -26,18 +31,18 @@ endif
 	@sleep 1
 
 	@if [ -f ./$*/interactive.tcl ]; then\
-		docker run -it -v $(OPENLANE_ROOT):/openLANE_flow \
+		$(DOCKER) run -it -v $(OPENLANE_ROOT):/openLANE_flow \
 		-v $(PDK_ROOT):$(PDK_ROOT) \
 		-v $(PWD)/..:/project \
 		-e PDK_ROOT=$(PDK_ROOT) \
-		-u $(shell id -u $(USER)):$(shell id -g $(USER)) \
+		$(DOCKER_USER_ARGS) \
 		$(OPENLANE_IMAGE_NAME) sh -c $(OPENLANE_INTERACTIVE_COMMAND);\
 	else\
-		docker run -it -v $(OPENLANE_ROOT):/openLANE_flow \
+		$(DOCKER) run -it -v $(OPENLANE_ROOT):/openLANE_flow \
 		-v $(PDK_ROOT):$(PDK_ROOT) \
 		-v $(PWD)/..:/project \
 		-e PDK_ROOT=$(PDK_ROOT) \
-		-u $(shell id -u $(USER)):$(shell id -g $(USER)) \
+		$(DOCKER_USER_ARGS) \
 		$(OPENLANE_IMAGE_NAME) sh -c $(OPENLANE_BASIC_COMMAND);\
 	fi
 
