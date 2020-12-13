@@ -25,11 +25,14 @@ set ::env(CLOCK_NET) "mprj.clk"
 
 set ::env(CLOCK_PERIOD) "10"
 
-set ::env(FP_CORE_UTIL) 55
+set ::env(FP_CORE_UTIL) 35
 set ::env(PL_TARGET_DENSITY) [ expr ($::env(FP_CORE_UTIL)+5) / 100.0 ]
 
 set ::env(PL_OPENPHYSYN_OPTIMIZATIONS) 0
 set ::env(DIODE_INSERTION_STRATEGY) 0
+#set ::env(PL_OPENPHYSYN_OPTIMIZATIONS) 1
+#set ::env(DIODE_INSERTION_STRATEGY) 1
+
 
 # Need to fix a FastRoute bug for this to work, but it's good
 # for a sense of "isolation"
@@ -42,10 +45,11 @@ set ::env(VERILOG_FILES) "\
 	$script_dir/../../verilog/rtl/user_proj_example.v"
 
 set ::env(VERILOG_FILES_BLACKBOX) "\
-	$script_dir/../../verilog/rtl/DFFRAM_4k.v"
+	$script_dir/../../verilog/rtl/defines.v \
+	$script_dir/../../verilog/rtl/DFFRAM.v"
 
 set ::env(EXTRA_LEFS) "\
-	$script_dir/../../lef/DFFRAM_4k.lef"
+	$script_dir/../../lef/DFFRAM.lef"
 
 set ::env(EXTRA_GDS_FILES) "\
-	$script_dir/../../gds/DFFRAM_4k.gds"
+	$script_dir/../../gds/DFFRAM.gds"
