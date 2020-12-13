@@ -4,11 +4,12 @@ set script_dir [file dirname [file normalize [info script]]]
 prep -design $script_dir -tag user_project_wrapper -overwrite
 set save_path $script_dir/../..
 
-verilog_elaborate
+#verilog_elaborate
+run_synthesis
 
-init_floorplan
-
-place_io_ol
+#init_floorplan
+#place_io_ol
+run_floorplan
 
 set ::env(FP_DEF_TEMPATE) $script_dir/../../def/user_project_wrapper_empty.def
 
@@ -17,6 +18,7 @@ apply_def_template
 add_macro_placement mprj 1150 1700 N
 
 manual_macro_placement f
+run_placement
 
 set ::env(_SPACING) 1.6
 set ::env(_WIDTH) 3
