@@ -25,7 +25,7 @@ set ::env(CLOCK_NET) "mprj.clk"
 
 set ::env(CLOCK_PERIOD) "10"
 
-set ::env(FP_CORE_UTIL) 35
+set ::env(FP_CORE_UTIL) 40
 set ::env(PL_TARGET_DENSITY) [ expr ($::env(FP_CORE_UTIL)+5) / 100.0 ]
 
 set ::env(PL_OPENPHYSYN_OPTIMIZATIONS) 0
@@ -46,10 +46,10 @@ set ::env(VERILOG_FILES) "\
 
 set ::env(VERILOG_FILES_BLACKBOX) "\
 	$script_dir/../../verilog/rtl/defines.v \
-	$script_dir/../../verilog/rtl/DFFRAM.v"
+	$script_dir/../../verilog/rtl/DFFRAM_4k.v"
 
 set ::env(EXTRA_LEFS) "\
-	$script_dir/../../lef/DFFRAM.lef"
+	$script_dir/../../lef/DFFRAM_4k.lef"
 
 set ::env(EXTRA_GDS_FILES) "\
-	$script_dir/../../gds/DFFRAM.gds"
+	$script_dir/../../gds/DFFRAM_4k.gds"
