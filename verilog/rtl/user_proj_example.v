@@ -123,7 +123,7 @@ module user_proj_example (
    assign io_out[17] = 0; // don't care
    assign io_oeb[17] = 1; // input
 
-   assign jtag_trst = 0; // don't use.
+   assign jtag_trst = rst;
 
    // SPI
    // assign unused  = io_in[8];
