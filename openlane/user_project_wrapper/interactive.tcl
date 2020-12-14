@@ -16,9 +16,9 @@ set ::env(FP_DEF_TEMPATE) $script_dir/../../def/user_project_wrapper_empty.def
 
 apply_def_template
 
-# FIXME
-add_macro_placement mprj.microwatt_0.soc0.bram.bram0.ram_0.memory_0 610 430 N
-add_macro_placement mprj.microwatt_0.soc0.bram.bram0.ram_0.memory_1 610 2190 N
+add_macro_placement mprj.microwatt_0.soc0.bram.bram0.ram_0.memory_0 1020 430 N
+add_macro_placement mprj.microwatt_0.soc0.bram.bram0.ram_0.memory_1 1020 2190 N
+add_macro_placement \mprj.microwatt_0.soc0.processor.register_file_0 200 200 N
 manual_macro_placement f
 
 run_placement

@@ -46,10 +46,12 @@ set ::env(VERILOG_FILES) "\
 
 set ::env(VERILOG_FILES_BLACKBOX) "\
 	$script_dir/../../verilog/rtl/defines.v \
-	$script_dir/../../verilog/rtl/DFFRAM_4k.v"
+	$script_dir/../../verilog/rtl/DFFRAM_4k.v \
+	$script_dir/../../verilog/rtl/register_file.v"
 
 set ::env(EXTRA_LEFS) "\
+	$script_dir/../../lef/register_file_16_1489f923c4dca729178b3e3233458550d8dddf29.lef \
 	$script_dir/../../lef/DFFRAM_4k.lef"
 
 set ::env(EXTRA_GDS_FILES) "\
-	$script_dir/../../gds/DFFRAM_4k.gds"
+	$script_dir/../../gds/register_file_16_1489f923c4dca729178b3e3233458550d8dddf29.gds"
