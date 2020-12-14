@@ -23014,16 +23014,16 @@ module main_bram_64_11_8192_a75adb9e07879fb6c63b494abe06e3f9a6bb2ed9(clk, addr, 
   assign _3_ = re | we;
   always @(posedge clk)
     _4_ <= { _2_, _0_ };
-  DFFRAM_4k memory_0 (
-    .A(addr[9:0]),
+  DFFRAM memory_0 (
+    .A(addr[7:0]),
     .CLK(clk),
     .Di(di[31:0]),
     .Do(_0_),
     .EN(_1_),
     .WE(sel_qual[3:0])
   );
-  DFFRAM_4k memory_1 (
-    .A(addr[9:0]),
+  DFFRAM memory_1 (
+    .A(addr[7:0]),
     .CLK(clk),
     .Di(di[63:32]),
     .Do(_2_),
