@@ -1,5 +1,3 @@
-# Not sure why the environment variables aren't getting set from interactive.tcl
-
 # Power nets
 set ::power_nets $::env(_VDD_NET_NAME)
 set ::ground_nets $::env(_GND_NET_NAME)
