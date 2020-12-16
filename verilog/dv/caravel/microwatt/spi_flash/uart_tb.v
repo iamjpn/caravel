@@ -206,7 +206,7 @@ module spi_flash;
 	);
 
 	spiflash #(
-		.FILENAME("test.hex")
+		.FILENAME("microwatt.hex")
 	) spiflash_microwatt (
 		.csb(user_flash_csb),
 		.clk(user_flash_clk),

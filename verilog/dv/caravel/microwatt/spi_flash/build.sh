@@ -8,6 +8,7 @@ ${CROSS_COMPILE}gcc -c head.S
 
 ${CROSS_COMPILE}ld -T powerpc.lds -o hello_world.elf console.o hello_world.o head.o
 
-${CROSS_COMPILE}objcopy -O binary hello_world.elf hello_world.bin
+${CROSS_COMPILE}objcopy -O verilog hello_world.elf microwatt.hex
 
-./bin2hex-split.py hello_world.bin
+# To fix the base address
+sed -i 's/@F000/@0000/g' microwatt.hex

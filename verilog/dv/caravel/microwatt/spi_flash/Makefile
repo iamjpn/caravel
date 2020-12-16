@@ -46,7 +46,7 @@ endif
 # ---- Clean ----
 
 clean:
-	rm -f *.elf *.bin *.vvp *.vcd *.log # *.hex
+	rm -f *.vvp *.vcd #*.elf *.bin *.o *.vvp *.vcd *.log *.hex
 
 .PHONY: clean hex all
 
