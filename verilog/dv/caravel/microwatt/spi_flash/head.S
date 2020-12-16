@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#define FLASH_AUTO_CFG_REG 0xc0006008
+
 /* Load an immediate 64-bit value into a register */
 #define LOAD_IMM64(r, e)			\
 	lis	r,(e)@highest;			\
@@ -25,44 +27,14 @@
 	.section ".head","ax"
 	.global _start
 _start:
-#if 0
-	LOAD_IMM64(1, 0x1122334455667788)
-	LOAD_IMM64(2, 0xA1A1A2A4A5A6A7A8)
-	LOAD_IMM64(3, 0xC0FFEEBAD15BADEE)
-	LOAD_IMM64(4, 0x8395720349234084)
-	LOAD_IMM64(5, 0x2342344142344144)
-
-	li	0,0
-
-	std	1,0(0)
-	std	2,72(0)
-	std	3,144(0)
-	std	4,192(0)
-	std	5,256(0)
-
-1:	ld	10,0(0)
-	cmpd	10,1
-	bne	2f
-
-	ld	10,72(0)
-	cmpd	10,2
-	bne	2f
-
-	ld	10,144(0)
-	cmpd	10,3
-	bne	2f
-
-	ld	10,192(0)
-	cmpd	10,4
-	bne	2f
-
-	ld	10,256(0)
-	cmpd	10,5
-	bne	2f
-	b	1b
-
-2:	b	2b
-#endif
+	// Set SPI flash divider to 1
+	LOAD_IMM64(3, FLASH_AUTO_CFG_REG)
+	lwzcix	%r5,0,%r3
+	lis	%r0,0xF
+	andc	%r5,%r5,%r0
+	lis	%r4,0x1
+	or	%r5,%r5,%r4
+	stwcix	%r5,0,%r3
 
 	// A few nops that we can check for in our test case
 	ori	31,31,0
