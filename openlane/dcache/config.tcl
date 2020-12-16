@@ -19,4 +19,4 @@ set ::env(FP_CORE_UTIL) 40
 set ::env(PL_TARGET_DENSITY) [ expr ($::env(FP_CORE_UTIL)+5) / 100.0 ]
 set ::env(CELL_PAD) 4
 
-#set ::env(FP_PIN_ORDER_CFG) $script_dir/pin_order.cfg
+set ::env(FP_PIN_ORDER_CFG) $script_dir/pin_order.cfg
