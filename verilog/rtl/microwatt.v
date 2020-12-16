@@ -19624,7 +19624,15 @@ module logical(rs, rb, op, invert_in, invert_out, datalen, result);
   assign result = { _0914_, _0913_, _0912_, _0911_ };
 endmodule
 
-module main_bram_64_11_8192_a75adb9e07879fb6c63b494abe06e3f9a6bb2ed9(clk, addr, di, sel, re, we, \do );
+module main_bram_64_11_8192_a75adb9e07879fb6c63b494abe06e3f9a6bb2ed9(
+`ifdef USE_POWER_PINS
+  vccd1, vssd1,
+`endif
+  clk, addr, di, sel, re, we, \do );
+`ifdef USE_POWER_PINS
+  inout vccd1;           /* 1.8V domain */
+  inout vssd1;
+`endif
   wire [31:0] _0_;
   wire _1_;
   wire [31:0] _2_;
@@ -19644,6 +19652,10 @@ module main_bram_64_11_8192_a75adb9e07879fb6c63b494abe06e3f9a6bb2ed9(clk, addr, 
   always @(posedge clk)
     _4_ <= { _2_, _0_ };
   DFFRAM memory_0 (
+`ifdef USE_POWER_PINS
+    .VPWR(vccd1),
+    .VGND(vssd1),
+`endif
     .A(addr[7:0]),
     .CLK(clk),
     .Di(di[31:0]),
@@ -19652,6 +19664,10 @@ module main_bram_64_11_8192_a75adb9e07879fb6c63b494abe06e3f9a6bb2ed9(clk, addr, 
     .WE(sel_qual[3:0])
   );
   DFFRAM memory_1 (
+`ifdef USE_POWER_PINS
+    .VPWR(vccd1),
+    .VGND(vssd1),
+`endif
     .A(addr[7:0]),
     .CLK(clk),
     .Di(di[63:32]),
@@ -26060,7 +26076,15 @@ module rotator(rs, ra, shift, insn, is_32bit, right_shift, arith, clear_left, cl
   assign carry_out = _310_;
 endmodule
 
-module soc_8192_50000000_0_0_4_0_4_0_05595549934fd81e6a826a04b06a7749bf32a293(rst, system_clk, wb_dram_out, wb_ext_io_out, ext_irq_eth, uart0_rxd, uart1_rxd, spi_flash_sdat_i, jtag_tck, jtag_tdi, jtag_tms, jtag_trst, alt_reset, wb_dram_in, wb_ext_io_in, wb_ext_is_dram_csr, wb_ext_is_dram_init, wb_ext_is_eth, uart0_txd, uart1_txd, spi_flash_sck, spi_flash_cs_n, spi_flash_sdat_o, spi_flash_sdat_oe, jtag_tdo);
+module soc_8192_50000000_0_0_4_0_4_0_05595549934fd81e6a826a04b06a7749bf32a293(
+`ifdef USE_POWER_PINS
+  vccd1, vssd1,
+`endif
+  rst, system_clk, wb_dram_out, wb_ext_io_out, ext_irq_eth, uart0_rxd, uart1_rxd, spi_flash_sdat_i, jtag_tck, jtag_tdi, jtag_tms, jtag_trst, alt_reset, wb_dram_in, wb_ext_io_in, wb_ext_is_dram_csr, wb_ext_is_dram_init, wb_ext_is_eth, uart0_txd, uart1_txd, spi_flash_sck, spi_flash_cs_n, spi_flash_sdat_o, spi_flash_sdat_oe, jtag_tdo);
+`ifdef USE_POWER_PINS
+  inout vccd1;           /* 1.8V domain */
+  inout vssd1;
+`endif
   wire [1:0] _000_;
   wire _001_;
   wire [31:0] _002_;
@@ -27200,6 +27224,10 @@ module soc_8192_50000000_0_0_4_0_4_0_05595549934fd81e6a826a04b06a7749bf32a293(rs
   assign _113_ = { wb_master_out[31:29], dram_at_0 } & 4'hf;
   assign _114_ = _113_ == 4'h0;
   wishbone_bram_wrapper_8192_a75adb9e07879fb6c63b494abe06e3f9a6bb2ed9 \bram.bram0  (
+`ifdef USE_POWER_PINS
+    .vccd1(vccd1),
+    .vssd1(vssd1),
+`endif
     .clk(system_clk),
     .rst(rst_bram),
     .wishbone_in({ wb_master_out[106:97], _134_, wb_master_out[95:0] }),
@@ -28868,7 +28896,15 @@ module syscon_50000000_8192_0_0_0_48b0f39094b8740694066d88f56ab64de2efe637(clk, 
   assign soc_reset = reg_ctrl[2];
 endmodule
 
-module microwatt(ext_clk, ext_rst, uart0_rxd, uart1_rxd, spi_flash_sdat_i, jtag_tck, jtag_tdi, jtag_tms, jtag_trst, ib_data, ib_pty, alt_reset, uart0_txd, uart1_txd, spi_flash_cs_n, spi_flash_clk, spi_flash_sdat_o, spi_flash_sdat_oe, jtag_tdo, oib_clk, ob_data, ob_pty, wb_ext_io_out);
+module microwatt(
+`ifdef USE_POWER_PINS
+  vccd1, vssd1,
+`endif
+  ext_clk, ext_rst, uart0_rxd, uart1_rxd, spi_flash_sdat_i, jtag_tck, jtag_tdi, jtag_tms, jtag_trst, ib_data, ib_pty, alt_reset, uart0_txd, uart1_txd, spi_flash_cs_n, spi_flash_clk, spi_flash_sdat_o, spi_flash_sdat_oe, jtag_tdo, oib_clk, ob_data, ob_pty, wb_ext_io_out);
+`ifdef USE_POWER_PINS
+  inout vccd1;           /* 1.8V domain */
+  inout vssd1;
+`endif
   wire _00_;
   wire _01_;
   wire _02_;
@@ -28939,6 +28975,10 @@ module microwatt(ext_clk, ext_rst, uart0_rxd, uart1_rxd, spi_flash_sdat_i, jtag_
     .wb_wr_data(wb_dram_out[95:32])
   );
   soc_8192_50000000_0_0_4_0_4_0_05595549934fd81e6a826a04b06a7749bf32a293 soc0 (
+`ifdef USE_POWER_PINS
+    .vccd1(vccd1),
+    .vssd1(vssd1),
+`endif
     .alt_reset(alt_reset),
     .ext_irq_eth(1'h0),
     .jtag_tck(jtag_tck),
@@ -29044,7 +29084,15 @@ module wishbone_arbiter_3(clk, rst, wb_masters_in, wb_slave_in, wb_masters_out, 
   assign wb_slave_out = _24_;
 endmodule
 
-module wishbone_bram_wrapper_8192_a75adb9e07879fb6c63b494abe06e3f9a6bb2ed9(clk, rst, wishbone_in, wishbone_out);
+module wishbone_bram_wrapper_8192_a75adb9e07879fb6c63b494abe06e3f9a6bb2ed9(
+`ifdef USE_POWER_PINS
+  vccd1, vssd1,
+`endif
+  clk, rst, wishbone_in, wishbone_out);
+`ifdef USE_POWER_PINS
+  inout vccd1;           /* 1.8V domain */
+  inout vssd1;
+`endif
   wire [63:0] _00_;
   wire _01_;
   wire _02_;
@@ -29083,6 +29131,10 @@ module wishbone_bram_wrapper_8192_a75adb9e07879fb6c63b494abe06e3f9a6bb2ed9(clk, 
   always @(posedge clk)
     ack_buf <= _11_;
   main_bram_64_11_8192_a75adb9e07879fb6c63b494abe06e3f9a6bb2ed9 ram_0 (
+`ifdef USE_POWER_PINS
+    .vccd1(vccd1),
+    .vssd1(vssd1),
+`endif
     .addr(wishbone_in[13:3]),
     .clk(clk),
     .di(wishbone_in[95:32]),
