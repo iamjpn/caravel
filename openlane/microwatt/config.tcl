@@ -82,3 +82,5 @@ set ::env(FP_PDN_CORE_RING) 0
 set ::env(GLB_RT_MAXLAYER) 5
 
 #set ::env(FP_PIN_ORDER_CFG) $script_dir/pin_order.cfg
+
+set ::env(FP_PIN_ORDER_CFG) ROUTING_CORES 96
