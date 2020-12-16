@@ -54,6 +54,7 @@ set ::env(EXTRA_GDS_FILES) "\
         $script_dir/../../gds/icache.gds \
         $script_dir/../../gds/dcache.gds"
 
+set ::env(FP_SIZING) absolute
 set ::env(DIE_AREA) "0 0 2900 3500"
 
 # Tune
@@ -66,13 +67,15 @@ set ::env(DIE_AREA) "0 0 2900 3500"
 #set ::env(SYNTH_MAX_FANOUT) 5
 #set ::env(PL_TARGET_DENSITY_CELLS) 0.38
 
-set ::env(FP_CORE_UTIL) 25
+set ::env(FP_CORE_UTIL) 20
 set ::env(SYNTH_STRATEGY) 2
 set ::env(SYNTH_MAX_FANOUT) 9
 set ::env(GLB_RT_ADJUSTMENT) 0
 set ::env(CELL_PAD) 4
 
 set ::env(PL_TARGET_DENSITY) [ expr ($::env(FP_CORE_UTIL)+5) / 100.0 ]
+
+set ::env(PL_OPENPHYSYN_OPTIMIZATIONS) 0
 
 set ::env(DESIGN_IS_CORE) 0
 set ::env(FP_PDN_CORE_RING) 0
