@@ -188,6 +188,10 @@ module user_proj_example (
 
    microwatt
      microwatt_0(
+`ifdef USE_POWER_PINS
+	       .vccd1(vccd1),	// User area 1 1.8V power
+	       .vssd1(vssd1),	// User area 1 digital ground
+`endif
 	       .ext_clk(ext_clk),
 	       .ext_rst(ext_rst_n),
 	       .alt_reset(alt_reset),
