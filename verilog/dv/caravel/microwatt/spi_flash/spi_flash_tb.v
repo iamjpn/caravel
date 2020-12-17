@@ -195,7 +195,7 @@ module spi_flash;
 	);
 
 	spiflash #(
-		.FILENAME("uart.hex")
+		.FILENAME("mgmt_engine.hex")
 	) spiflash (
 		.csb(flash_csb),
 		.clk(flash_clk),
