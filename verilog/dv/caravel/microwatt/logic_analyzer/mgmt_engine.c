@@ -13,11 +13,14 @@ void main(void)
 	reg_la2_data = 0x00000002 | 0x00000004;
 
 	// Signal to the tb that we are alive
-	reg_mprj_datal = 0x00000001;
+	reg_mprj_datal = 0xa0000000;
+	
+	// Configure as outputs from mgmt SOC
+	reg_la1_ena = 0x00000000;	// [63:32]
+	reg_la1_data = 0xdeadbeef;
 
 	// Configure all other LA probes as inputs to the management SOC
 	reg_la0_ena = 0xFFFFFFFF;	// [31:0]
-	reg_la1_ena = 0xFFFFFFFF;	// [63:32]
 	reg_la3_ena = 0xFFFFFFFF;	// [127:96]
 
 	// external bus
@@ -69,7 +72,15 @@ void main(void)
 	// Take microwatt out of reset
 	reg_la2_data &= ~0x00000002;
 
+	while (1) {
+		if (reg_la0_data == 0xdeadbeef) {
+			// Signal to the tb that we are done
+			reg_mprj_datal = 0xf0000000;
+			break;
+		}
+	}
+
 	// Do nothing
-	while (1)
-		;
+	while(1);
+	
 }

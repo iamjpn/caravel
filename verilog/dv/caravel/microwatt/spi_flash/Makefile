@@ -4,12 +4,13 @@ RTL_PATH = $(VERILOG_PATH)/rtl
 IP_PATH = ../../../../ip
 BEHAVIOURAL_MODELS = ../../
 
-GCC_PATH?=/ef/apps/bin
-GCC_PREFIX?=riscv32-unknown-elf
-PDK_PATH?=/ef/tech/SW/sky130A
+#GCC_PATH?=/ef/apps/bin
+#GCC_PREFIX?=riscv32-unknown-elf
+GCC_PREFIX?=riscv64-linux-gnu
+PDK_PATH?=~/src/pdk/sky130A
 
-POWERPC_CROSS_COMPILE?=powerpc64le-linux-
-POWERPC_CFLAGS=-Os -g -Wall -std=c99 -msoft-float -mno-string -mno-multiple -mno-vsx -mno-altivec -mlittle-endian -fno-stack-protector -mstrict-align -ffreestanding -fdata-sections -ffunction-sections -nostdlib -I../include
+POWERPC_CROSS_COMPILE?=powerpc64le-linux-gnu-
+POWERPC_CFLAGS=-static -Os -g -Wall -std=c99 -msoft-float -mno-string -mno-multiple -mno-vsx -mno-altivec -mlittle-endian -fno-stack-protector -mstrict-align -ffreestanding -fdata-sections -ffunction-sections -nostdlib -I../include
 
 SIM?=RTL
 
@@ -36,15 +37,15 @@ endif
 # Management engine code
 
 mgmt_engine.elf: mgmt_engine.c $(FIRMWARE_PATH)/sections.lds $(FIRMWARE_PATH)/start.s
-	${GCC_PATH}/${GCC_PREFIX}-gcc -march=rv32imc -mabi=ilp32 -Wl,-Bstatic,-T,$(FIRMWARE_PATH)/sections.lds,--strip-debug -ffreestanding -nostdlib -o $@ $(FIRMWARE_PATH)/start.s $<
+	${GCC_PREFIX}-gcc -march=rv32imc -mabi=ilp32 -Wl,-Bstatic,-T,$(FIRMWARE_PATH)/sections.lds,--strip-debug -ffreestanding -nostdlib -o $@ $(FIRMWARE_PATH)/start.s $<
 
 mgmt_engine.hex: mgmt_engine.elf
-	${GCC_PATH}/${GCC_PREFIX}-objcopy -O verilog $< $@
+	${GCC_PREFIX}-objcopy -O verilog $< $@
 	# to fix flash base address
 	sed -i 's/@1000/@0000/g' $@
 
 mgmt_engine.bin: mgmt_engine.elf
-	${GCC_PATH}/${GCC_PREFIX}-objcopy -O binary $< /dev/stdout | tail -c +1048577 > $@
+	${GCC_PREFIX}-objcopy -O binary $< /dev/stdout | tail -c +1048577 > $@
 
 # Microwatt code
 microwatt.elf: microwatt.c ../lib/console.c head.S ../microwatt.lds

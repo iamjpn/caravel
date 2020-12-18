@@ -45,7 +45,7 @@ module monitor_rx # (
 
 	// Our simulation is in nanosecond steps and we want 5 clocks per bit,
 	// ie 10 clock transitions
-	always #(1000000000/baud_rate/10) clk <= (clk === 1'b0);
+	always #(1000000000/baud_rate/100) clk <= (clk === 1'b0);
 
 	always @(posedge clk) begin
 		recv_divcnt <= recv_divcnt + 1;
@@ -113,7 +113,7 @@ module spi_flash;
 	assign uart_tx = mprj_io[6];
 
 	// 50 MHz clock
-	always #10 clock <= (clock === 1'b0);
+	always #1 clock <= (clock === 1'b0);
 
 	initial begin
 		clock = 0;
@@ -151,6 +151,9 @@ module spi_flash;
 	always @(checkbits) begin
 		if(checkbits == 4'hA) begin
 			$display("Management engine started");
+		end
+		if(checkbits == 4'hf) begin
+			$display("Echoed inverted logic analyzer");
 		end
 	end
 
