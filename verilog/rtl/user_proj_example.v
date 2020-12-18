@@ -84,6 +84,8 @@ module user_proj_example (
    wire 	uart0_txd;
    wire 	uart1_rxd; // not hooked up
    wire 	uart1_txd; // not hooked up
+   wire		[31:0] logic_analyzeri;
+   wire		[31:0] logic_analyzero;
 
    wire		oib_clk;
    wire	[7:0]	ob_data;
@@ -186,6 +188,9 @@ module user_proj_example (
    assign ib_data = io_in[35:28];
    assign ib_pty = io_in[36];
 
+   assign logic_analyzero[31:0] = la_data_in[31:0];
+   assign logic_analyzeri[31:0] = la_data_in[63:32]; 
+
    microwatt
      microwatt_0(
 `ifdef USE_POWER_PINS
@@ -213,7 +218,9 @@ module user_proj_example (
 	       .ob_data(ob_data),
 	       .ob_pty(ob_pty),
 	       .ib_data(ib_data),
-		 .ib_pty(ib_pty));
+		 .ib_pty(ib_pty),
+		.gpio_in(logic_analyzeri),
+		.gpio_out(logic_analyzero));
 
 endmodule
 
